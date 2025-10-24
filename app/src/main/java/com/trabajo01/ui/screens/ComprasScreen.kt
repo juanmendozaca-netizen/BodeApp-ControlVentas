@@ -40,10 +40,12 @@ fun ComprasScreen(navController: NavController) {
                 text = "Pantalla Compras",
                 style = MaterialTheme.typography.headlineMedium
             )
-            Text(
-                text = "Aquí irá el registro de compras e insumos",
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text("Aquí se registrarán las compras de insumos")
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(onClick = { navController.popBackStack() }) {
+                Text("Volver al Home")
+            }
         }
     }
 }

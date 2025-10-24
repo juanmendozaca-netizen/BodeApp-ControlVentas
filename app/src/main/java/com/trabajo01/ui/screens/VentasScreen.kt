@@ -40,10 +40,12 @@ fun VentasScreen(navController: NavController) {
                 text = "Pantalla Ventas",
                 style = MaterialTheme.typography.headlineMedium
             )
-            Text(
-                text = "Aquí irá el registro de ventas",
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text("Aquí se registrarán las ventas diarias")
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(onClick = { navController.popBackStack() }) {
+                Text("Volver al Home")
+            }
         }
     }
 }

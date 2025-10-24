@@ -15,7 +15,10 @@ fun HomeScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("BodeApp - Control de Ventas") }
+                title = { Text("BodeApp - Control de Ventas") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
             )
         }
     ) { padding ->
@@ -29,27 +32,35 @@ fun HomeScreen(navController: NavController) {
         ) {
             Text(
                 text = "Pantalla Home",
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineLarge
             )
             Spacer(modifier = Modifier.height(24.dp))
 
-            Button(onClick = { navController.navigate(Screen.RegistroProducto.route) }) {
-                Text("Ir a Registro Producto")
+            Button(onClick = { navController.navigate(Screen.RegistroProducto.route) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Registro de Producto")
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            Button(onClick = { navController.navigate(Screen.Ventas.route) }) {
-                Text("Ir a Ventas")
+            Button(onClick = { navController.navigate(Screen.Ventas.route) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Ventas")
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            Button(onClick = { navController.navigate(Screen.Compras.route) }) {
-                Text("Ir a Compras")
+            Button(onClick = { navController.navigate(Screen.Compras.route) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Compras")
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            Button(onClick = { navController.navigate(Screen.CierreCaja.route) }) {
-                Text("Ir a Cierre de Caja")
+            Button(onClick = { navController.navigate(Screen.CierreCaja.route) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Cierre de Caja")
             }
         }
     }

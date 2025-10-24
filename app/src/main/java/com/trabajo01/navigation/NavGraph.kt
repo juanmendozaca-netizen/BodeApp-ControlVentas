@@ -10,6 +10,13 @@ import com.trabajo01.ui.screens.HomeScreen
 import com.trabajo01.ui.screens.RegistroProductoScreen
 import com.trabajo01.ui.screens.VentasScreen
 
+sealed class Screens(val route: String) {
+    object Home : Screen("home")
+    object RegistroProducto : Screen("registro_producto")
+    object Ventas : Screen("ventas")
+    object Compras : Screen("compras")
+    object CierreCaja : Screen("cierre_caja")
+}
 @Composable
 fun NavGraph(navController: NavHostController) {
     NavHost(
