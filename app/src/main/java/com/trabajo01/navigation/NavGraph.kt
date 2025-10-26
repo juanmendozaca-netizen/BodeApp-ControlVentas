@@ -10,6 +10,7 @@ import com.trabajo01.ui.screens.HomeScreen
 import com.trabajo01.ui.screens.RegistroProductoScreen
 import com.trabajo01.ui.screens.VentasScreen
 
+
 sealed class Screens(val route: String) {
     object Home : Screen("home")
     object RegistroProducto : Screen("registro_producto")
