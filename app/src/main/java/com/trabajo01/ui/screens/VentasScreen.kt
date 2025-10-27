@@ -13,8 +13,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.trabajo01.data.AppDatabase
-import com.trabajo01.data.entity.Venta
+import com.trabajo01.data.database.AppDatabase
+import com.trabajo01.model.Venta
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*

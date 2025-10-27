@@ -1,16 +1,18 @@
-package com.trabajo01.data.entity
+//model/Venta.kt
+
+package com.trabajo01.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "compras")
-data class Compra(
+@Entity(tableName = "ventas")
+data class Venta(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
 
-    val insumo: String,
+    val producto: String,
     val cantidad: Int,
-    val costo: Double,
+    val precioUnitario: Double,
     val total: Double,
     val fecha: Long = System.currentTimeMillis()
 )
