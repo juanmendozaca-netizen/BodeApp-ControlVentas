@@ -1,3 +1,5 @@
+//model/Producto.kt
+
 package com.trabajo01.model
 
 import androidx.room.Entity

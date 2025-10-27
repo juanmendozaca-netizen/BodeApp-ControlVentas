@@ -1,3 +1,5 @@
+//navigation/NavGraph.kt
+
 package com.trabajo01.navigation
 
 import androidx.compose.runtime.Composable
@@ -41,3 +43,4 @@ fun NavGraph(navController: NavHostController) {
         }
     }
 }
+
