@@ -31,9 +31,12 @@ fun VentasScreen(navController: NavController) {
     var productoNombre by remember { mutableStateOf("") }
     var cantidad by remember { mutableStateOf("") }
     var precioUnitario by remember { mutableStateOf("") }
+    var mensajeError by remember { mutableStateOf("") }
+    var mostrarError by remember { mutableStateOf(false) }
 
     val ventasDelDia by ventaDao.obtenerTodasLasVentas()
         .collectAsState(initial = emptyList())
+    val totalVentas = ventasDelDia.sumOf { it.total }
 
     val subtotal = remember(cantidad, precioUnitario) {
         val cant = cantidad.toDoubleOrNull() ?: 0.0
@@ -74,7 +77,8 @@ fun VentasScreen(navController: NavController) {
                 onValueChange = { productoNombre = it },
                 label = { Text("Producto") },
                 placeholder = { Text("Ej: Galleta de vainilla") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = mostrarError && productoNombre.isBlank()
             )
 
             Row(
@@ -86,7 +90,8 @@ fun VentasScreen(navController: NavController) {
                     onValueChange = { cantidad = it },
                     label = { Text("Cantidad") },
                     placeholder = { Text("0") },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    isError = mostrarError && (cantidad.isBlank() || cantidad.toIntOrNull() == null || cantidad.toIntOrNull()!! <= 0)
                 )
 
                 OutlinedTextField(
@@ -94,7 +99,8 @@ fun VentasScreen(navController: NavController) {
                     onValueChange = { precioUnitario = it },
                     label = { Text("Precio") },
                     placeholder = { Text("0.00") },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    isError = mostrarError && (precioUnitario.isBlank() || precioUnitario.toDoubleOrNull() == null || precioUnitario.toDoubleOrNull()!! <= 0)
                 )
             }
 
@@ -105,35 +111,132 @@ fun VentasScreen(navController: NavController) {
 
             Button(
                 onClick = {
-                    if (productoNombre.isNotBlank() &&
-                        cantidad.isNotBlank() &&
-                        precioUnitario.isNotBlank()) {
+                    mostrarError = false
+                    mensajeError = ""
 
-                        val nuevaVenta = Venta(
-                            producto = productoNombre,
-                            cantidad = cantidad.toIntOrNull() ?: 0,
-                            precioUnitario = precioUnitario.toDoubleOrNull() ?: 0.0,
-                            total = subtotal
-                        )
-
-                        scope.launch {
-                            ventaDao.insertarVenta(nuevaVenta)
-                        }
-
-                        productoNombre = ""
-                        cantidad = ""
-                        precioUnitario = ""
+                    if (productoNombre.isBlank()) {
+                        mensajeError = "El nombre del producto es obligatorio"
+                        mostrarError = true
+                        return@Button
                     }
+
+                    if (cantidad.isBlank()) {
+                        mensajeError = "La cantidad es obligatoria"
+                        mostrarError = true
+                        return@Button
+                    }
+
+                    if (precioUnitario.isBlank()) {
+                        mensajeError = "El precio unitario es obligatorio"
+                        mostrarError = true
+                        return@Button
+                    }
+
+                    val cantidadInt = cantidad.toIntOrNull()
+                    if (cantidadInt == null || cantidadInt <= 0) {
+                        mensajeError = "La cantidad debe ser un número mayor a 0"
+                        mostrarError = true
+                        return@Button
+                    }
+
+                    val precioDouble = precioUnitario.toDoubleOrNull()
+                    if (precioDouble == null || precioDouble <= 0) {
+                        mensajeError = "El precio debe ser un número mayor a 0"
+                        mostrarError = true
+                        return@Button
+                    }
+
+                    val nuevaVenta = Venta(
+                        producto = productoNombre,
+                        cantidad = cantidadInt,
+                        precioUnitario = precioDouble,
+                        total = subtotal
+                    )
+
+                    scope.launch {
+                        ventaDao.insertarVenta(nuevaVenta)
+                    }
+
+                    productoNombre = ""
+                    cantidad = ""
+                    precioUnitario = ""
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Agregar Venta")
             }
 
+            if (mostrarError && mensajeError.isNotEmpty()) {
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "⚠️ $mensajeError",
+                        modifier = Modifier.padding(12.dp),
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
 
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        text = "Reporte de Ventas",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text(
+                                text = "Total ventas:",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Text(
+                                text = "${ventasDelDia.size} ventas",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+
+                        Column(horizontalAlignment = Alignment.End) {
+                            Text(
+                                text = "Ingresos totales:",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Text(
+                                text = "S/ %.2f".format(totalVentas),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
-                text = "Ventas del día (${ventasDelDia.size})",
+                text = "Ventas registradas",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium
             )
