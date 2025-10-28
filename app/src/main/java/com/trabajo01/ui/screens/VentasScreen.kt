@@ -31,6 +31,7 @@ fun VentasScreen(navController: NavController) {
     var productoNombre by remember { mutableStateOf("") }
     var cantidad by remember { mutableStateOf("") }
     var precioUnitario by remember { mutableStateOf("") }
+
     var mensajeError by remember { mutableStateOf("") }
     var mostrarError by remember { mutableStateOf(false) }
 
