@@ -29,6 +29,7 @@ fun RegistroProductoScreen(
     var nombre by remember { mutableStateOf("") }
     var precio by remember { mutableStateOf("") }
     var stock by remember { mutableStateOf("") }
+
     var categoriaSeleccionada by remember { mutableStateOf("") }
     var otraCategoria by remember { mutableStateOf("") }
     var expandedCategoria by remember { mutableStateOf(false) }
@@ -38,7 +39,9 @@ fun RegistroProductoScreen(
     var mostrarDialogoEliminar by remember { mutableStateOf<Producto?>(null) }
 
     val snackbarHostState = remember { SnackbarHostState() }
+
     val scope = rememberCoroutineScope()
+
     val categorias = listOf("Snack", "Abarrotes", "Lácteos", "Limpieza", "Otros")
 
     val productos by viewModel.todosLosProductos.collectAsState(initial = emptyList())
